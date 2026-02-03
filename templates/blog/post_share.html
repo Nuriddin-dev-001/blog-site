@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Share "{{ post.title }}" by email{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Share "{{ post.title }}" by email</h2>
+            </div>
+            <div class="card-body">
+                {% if sent %}
+                    <div class="alert alert-success">
+                        Email successfully sent to {{ form.cleaned_data.to }}.
+                    </div>
+                    <a href="{{ post.get_absolute_url }}" class="btn btn-primary">
+                        Back to post
+                    </a>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ post.get_absolute_url }}" class="btn btn-secondary me-md-2">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Send email
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
